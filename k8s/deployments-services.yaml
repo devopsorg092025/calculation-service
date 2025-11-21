@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calc-auth
+  namespace: calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calc-auth
+  template:
+    metadata:
+      labels:
+        app: calc-auth
+    spec:
+      containers:
+      - name: calc-auth
+        image: calc-auth:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calc-auth
+  namespace: calc
+spec:
+  type: NodePort
+  selector:
+    app: calc-auth
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calc-backend
+  namespace: calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calc-backend
+  template:
+    metadata:
+      labels:
+        app: calc-backend
+    spec:
+      containers:
+      - name: calc-backend
+        image: calc-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calc-backend
+  namespace: calc
+spec:
+  type: NodePort
+  selector:
+    app: calc-backend
+  ports:
+    - port: 5001
+      targetPort: 5001
+      nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calc-frontend
+  namespace: calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calc-frontend
+  template:
+    metadata:
+      labels:
+        app: calc-frontend
+    spec:
+      containers:
+      - name: calc-frontend
+        image: calc-frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calc-frontend
+  namespace: calc
+spec:
+  type: NodePort
+  selector:
+    app: calc-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080

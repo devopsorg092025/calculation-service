@@ -1,0 +1,25 @@
+services:
+  calc-frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    networks:
+      - calc_network
+
+  calc-backend:
+    build: ./calculation-service
+    ports:
+      - "5001:5001"
+    networks:
+      - calc_network
+
+  calc-auth:
+    build: ./auth-service
+    ports:
+      - "5000:5000"
+    networks:
+      - calc_network
+
+networks:
+  calc_network:
+    driver: bridge
