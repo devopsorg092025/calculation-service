@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calc-auth
+  namespace: calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calc-auth
+  template:
+    metadata:
+      labels:
+        app: calc-auth
+    spec:
+      containers:
+        - name: calc-auth
+          image: your-dockerhub-user/auth-service:latest
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calc-auth
+  namespace: calc
+spec:
+  type: NodePort
+  selector:
+    app: calc-auth
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30000

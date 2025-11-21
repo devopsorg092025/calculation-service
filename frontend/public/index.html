@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <h1>Calculator App</h1>
+
+  <!-- Login Box -->
+  <div id="loginBox">
+    <h2>Login</h2>
+    <input id="username" placeholder="Username"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- Calculator Box -->
+  <div id="calcBox">
+    <h2>Calculator</h2>
+    <input id="num1" type="number" value="0" placeholder="Enter first number">
+    <input id="num2" type="number" value="0" placeholder="Enter second number"><br>
+
+    <div class="button-group">
+      <button onclick="calculate('add')">Add</button>
+      <button onclick="calculate('subtract')">Subtract</button>
+      <button onclick="calculate('multiply')">Multiply</button>
+      <button onclick="calculate('divide')">Divide</button>
+    </div>
+
+    <p id="result"></p>
+
+    <div class="button-group">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Show login or calculator based on saved state ---
+    function showLogin() {
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("calcBox").style.display = "none";
+    }
+
+    function showCalc() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("calcBox").style.display = "block";
+    }
+
+    // --- Initial page load ---
+    if (localStorage.getItem("loggedIn") === "true") {
+      showCalc();
+    } else {
+      showLogin();
+    }
+
+    // --- Login function ---
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const msg = document.getElementById("loginMsg");
+
+      if (user === "admin" && pass === "1234") {
+        localStorage.setItem("loggedIn", "true");
+        msg.textContent = "";
+        showCalc();
+      } else {
+        msg.textContent = "Invalid username or password!";
+      }
+    }
+
+    // --- Logout function ---
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      showLogin();
+    }
+
+    // --- Calculator function ---
+    function calculate(op) {
+      const n1 = parseFloat(document.getElementById("num1").value);
+      const n2 = parseFloat(document.getElementById("num2").value);
+      const resultEl = document.getElementById("result");
+
+      if (isNaN(n1) || isNaN(n2)) {
+        resultEl.textContent = "Please enter valid numbers!";
+        return;
+      }
+
+      let res;
+      switch (op) {
+        case "add": res = n1 + n2; break;
+        case "subtract": res = n1 - n2; break;
+        case "multiply": res = n1 * n2; break;
+        case "divide": res = n2 !== 0 ? n1 / n2 : "Error: divide by zero"; break;
+        default: res = "Unknown operation";
+      }
+
+      resultEl.textContent = "Result: " + res;
+    }
+  </script>
+</body>
+</html>
